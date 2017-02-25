@@ -1,0 +1,31 @@
+@media screen and (min-width:0px)  and (max-width: 768px) {
+	 #home{
+		 margin-top:10px;
+	 }
+	 #Quiz,#SignIn{
+		margin-top:10px; 
+	 }	 	 
+}
+@media screen and (min-width:769px) {
+	 #home{
+		 margin-top:60px;
+	 }
+	 #home p{
+		 font-size:30px;
+	 }
+	 #Quiz{
+		margin-top:60px; 
+	 }
+	 #SignIn{
+		margin-top:90px; 
+	 }
+	 #contentsect{
+		 margin-top:120px;
+	 }
+}
+#testt{
+	display:box;
+	background-color:#566573;
+	margin-top:10px;
+	height:60px;
+}
