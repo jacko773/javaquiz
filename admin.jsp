@@ -23,7 +23,7 @@
 	 </div><br/><br/>
 	 <div class="col-md-12">
 	 <label for="quizno" style="color:pink">select the quiznumber:</label>
-     <input type="text" class="form-control" name="quizno" id="quizno" placeholder="quizno as qz1 or qz2">
+     <input type="text" class="form-control" name="quizno" id="quizno" placeholder="quizno as q1 or q2">
 	 </div>
 </div>
 <div class="col-md-6">
