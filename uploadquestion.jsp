@@ -10,9 +10,9 @@
    String explanation =request.getParameter("explanation");
    String DRIVER="jdbc:mysql://localhost:3306/"+database;
    Class.forName("com.mysql.jdbc.Driver");
-   Connection con = DriverManager.getConnection(DRIVER, "root", "");
-   String vals="values('"+ques+"','"+opt1+"','"+opt2+"','"+opt3+"','"+opt4+"','"+ans+"','"+explanation+"')";
-   String sql="insert into "+table+"(ques,opt1,opt2,opt3,opt4,ans,explanation)"+vals ;
+   Connection con = DriverManager.getConnection(DRIVER, "root", "root");
+   String vals="values('"+ques+"','"+opt1+"','"+opt2+"','"+opt3+"','"+opt4+"','"+ans+"')";
+   String sql="insert into "+table+"(QUESTION,OPTA,OPTB,OPTC,OPTD,ans)"+vals ;
    Statement stmt=con.createStatement(); 
    int result=stmt.executeUpdate(sql);
 %>
