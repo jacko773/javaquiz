@@ -1,28 +1,52 @@
+<%@ page import="java.sql.*" %>
+<%
+String args=request.getParameter("myArray");
+String arr[]=args.split(",");
+String database=request.getParameter("db");
+String tb=request.getParameter("tb");
+int count=0;
+	String DRIVER="jdbc:mysql://localhost:3306/"+database;
+	String USER="root";
+	String PASSWORD="root";
+	Class.forName("com.mysql.jdbc.Driver");
+	Connection con = DriverManager.getConnection(DRIVER, USER, PASSWORD);
+	Statement st=con.createStatement();
+%>
+
 <html>
-<head>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
-</head>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<table class="table table-striped">
+	<tr>
+		<td>quesno</td>
+		<td>your answer</td>
+		<td>answer</td>
+		<td>mark obtain</td>
+		<td>total marks</td>
+	</tr>
+<% for(int i=1;i<arr.length;i++){
+		String sql="select ans from "+tb+" where ID="+i;
+		ResultSet rs =st.executeQuery(sql);
+		while(rs.next()){
+		String ans1=rs.getString("ans");
+		String ans2=arr[i];
+%>
+	<tr>
+		<td><%=i%></td>
+		<td><%=arr[i]%></td>
+		<td><%=(String)rs.getString("ans")%></td>
+		<%if(ans1.equals(ans2)){%>
+			<%count=count+1;%>
+			<td>+1</td>
 
-<body>
-
-
-<button id="get">your ans are</button>
-     <script>
-	     $(document).ready(function(){
-			 var newHTML=[];
-			 $('#get').on('click', function(){
-            var myArray = sessionStorage.getItem('myArray');
-			for (var i = 0; i < myArray.length; i++) {
-    newHTML.push('<span>'+i+'-'+ myArray[i] + '</span><br/>');
+		<%}else{%>
+			<td>-1</td>
+			<%count=count-1;%>
+		<%}%>
+		<td><%=count%></td>
+	</tr>
+<%}
 }
-$("#result").html(newHTML.join(""));
-});			 
-		 });
-	 </script>
-	 <div>
-	 <table>
-	 </table>
-	 </div>
-</body>
+%>
+</table>
+<center><h1>Total marks obtained</h1><h1><%=count%></h1></center>
 </html>
