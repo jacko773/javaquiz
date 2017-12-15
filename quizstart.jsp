@@ -1,7 +1,6 @@
 <%@ page import="java.sql.*"%>
 <% String database=request.getParameter("db");
    String table=request.getParameter("tablenum"); 
-   
 %>
  <!DOCTYPE html>  
 <html lang="en">  
@@ -38,6 +37,7 @@
      $(document).ready(function(){
 		 var arr=[];
 		 var quesno=1;
+		 
 		 if(quesno==1){
 			 $('.i').bind('click', function(e){
         e.preventDefault();
@@ -45,6 +45,7 @@
 		 }
 		 var tab="<%=table%>";
 		 var database="<%=database%>";
+		 
 		 $("#next").click(function(){
 			 if(quesno<10){
 			 if($("input[name='gender']:checked").val()){
@@ -63,7 +64,6 @@
 				 }else if(v=='D'){
 					 $('input:radio[name=gender]:nth(3)').attr('checked',true);
 				 }
-			 
     });	
 			 }	
 			 if(quesno==10){
@@ -94,12 +94,11 @@
      $(window).load(function() {
        $.get("question.jsp",{db:database,tablenum:tab,quesnum:quesno},function(data){
              $(".ques").html(data);	
-     
 });		
 	});
 	$("#submit").click(function(){
-		sessionStorage.setItem('myArray',arr);
-		window.location.href = "result.jsp";
+		
+		window.location.href="result.jsp?myArray="+arr+"&db=<%=database%>&tb=<%=table%>";
 	});
 	});
 </script>
