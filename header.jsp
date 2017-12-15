@@ -2,10 +2,10 @@
 <div class="well" style="margin:0px;background-color:white">
     <div class="container">
     <div class="col-md-9">
-	 <strong><font  size="30px" color="green">Java Quiz</font></strong>
+	 <strong><font  size="5px" color="green">Java Quiz</font></strong>
 	</div> 
 	 <div class="col-md-3">
-     <% String name1=(String)session.getAttribute("user");
+     <% String name1=(String)session.getAttribute("USER");
          if(name1==null){	
          }else{
 	 %>
@@ -32,4 +32,4 @@
     </div>    
 </div>
 
-</div>	
+</div>
