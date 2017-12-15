@@ -1,4 +1,18 @@
-<!DOCTYPE html>  
+<%@ page import="java.sql.*" %>  
+<%
+	String database=request.getParameter("test");
+	String DRIVER="jdbc:mysql://localhost:3306/"+database;
+	String USER="root";
+	String PASSWORD="root";
+	int count=0;
+	Class.forName("com.mysql.jdbc.Driver");
+	System.out.println("driver loaded ");
+	Connection con = DriverManager.getConnection(DRIVER, USER, PASSWORD);  
+	Statement st=con.createStatement();
+	String sql="show tables";
+	ResultSet rs =st.executeQuery(sql);
+%>
+<!DOCTYPE html>
 <html lang="eng">
 <head>
      <meta name="viewport" content="width=device-width, initial-scale=1">  
@@ -57,8 +71,6 @@
         );		
 	  }
    });
-   
-
 </script>	
 </head>
 <body>
@@ -72,16 +84,12 @@
 	<div class="sidebarnav">
 	     <hr/>
 		 <center>
-        <a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz1">java quiz 1</a><hr/>
-        <a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz2">java quiz 2</a><hr/>		
-        <a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz3">java quiz 3</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz4">java quiz 4</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz5">java quiz 5</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz6">java quiz 6</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz7">java quiz 7</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz8">java quiz 8</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz9">java quiz 9</a><hr/>
-		<a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=qz10">java quiz 10</a><hr/>
+		 <%while(rs.next()){%>
+		 
+        <a href="quizstart.jsp?db=<%=request.getParameter("test")%>&tablenum=q<%=++count%>">java quiz<%=count%></a><hr/>
+		<%
+		}
+		%>
 		</center>
 	</div>    
 	 </div>
