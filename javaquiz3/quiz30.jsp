@@ -94,7 +94,7 @@
 	</div>    
 	 </div>
      
-<div class="col-md-10" id="contentsect"  >
+<div class="col-md-10 hidden-xs" id="contentsect"  >
 	 
 <div >     
 

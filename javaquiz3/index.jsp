@@ -7,10 +7,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
   body{
-	  background-image:url("edu2.jpg");
+	  background-image:url("ed.jpg");
 	  background-repeat: no-repeat;
     background-size: 100% 100%;
-	background-color:grey;
 	opacity:0.7;
   }
   #home{
@@ -25,7 +24,7 @@
 	 <div class="">
 		 <div class="container"> 
              <center>	 
-			     <p style="color:white"><em>Come And Learn Java In The Best Way</em><p>
+			     <p style="color:green"><em>Come And Learn Java In The Best Way</em><p>
 <form action="SignUp.jsp" method="GET" name="myform" style="width:300px" onsubmit="return validateform()">  
   <div class="form-group">    
     <input type="text" class="form-control glyphicon" id="user" name="user" placeholder="&#57352 User name" required/>

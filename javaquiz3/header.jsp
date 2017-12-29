@@ -8,9 +8,9 @@
      <% String name1=(String)session.getAttribute("USER");
          if(name1==null){
 	%>
-			<ul class="nav navbar-nav navbar-right">
-			 <li><a href="index.jsp"><span class="glyphicon glyphicon-user "></span> sign up</a></li>
-			 <li><a href="signin.jsp"><span class="glyphicon glyphicon-log-in "></span> login</a></li>			 
+			<ul class="nav navbar-nav navbar-right visible-lg">
+			 <li><a href="index.jsp"><span class="glyphicon glyphicon-user"></span> sign up</a></li>
+			 <li><a href="signin.jsp"><span class="glyphicon glyphicon-log-in"></span> login</a></li>			 
       </ul>
      <%  }else{
 	 %>

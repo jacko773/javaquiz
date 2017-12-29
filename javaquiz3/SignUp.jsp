@@ -8,7 +8,7 @@ String cpassword=request.getParameter("InputPassword3");
 
 	Class.forName("com.mysql.jdbc.Driver");
 	System.out.println("driver loaded ");
-	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "");
+	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
 	System.out.println("Connection establish");
 	   
 Statement st=con.createStatement();

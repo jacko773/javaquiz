@@ -7,10 +7,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
   body{
-	  background-image:url("edu2.jpg");
+	  background-image:url("ed.jpg");
 	  background-repeat: no-repeat;
     background-size: 100% 100%;
-	background-color:grey;
 	opacity:0.7;
   }
   #home{
@@ -25,7 +24,7 @@
 	 <div class="">
 		 <div class="container"> 
              <center>	 
-			     <p style="color:white"><em>Come And Learn Java In The Best Way</em><p>
+			     <p style="color:green"><em>Come And Learn Java In The Best Way</em><p>
 							
 								<form style="width:300px" action="login.jsp">  
 									<div class="form-group">   
@@ -35,7 +34,7 @@
 										<input type="password" class="form-control glyphicon" id="InputPassword1" name="InputPassword1" placeholder="&#57395 Password" required />  
 									</div> 
 									<div class="checkbox">
-										<label style="float:left"><input type="checkbox" value=""><font color="white">Remember me</font></label><label style="float:right"><a href="forgetpass.jsp"><font color="red">forget password?</font></a></label>
+										<label style="float:left"><input type="checkbox" value=""><font color="blue">Remember me</font></label><label style="float:right"><a href="forgetpass.jsp"><font color="red">forget password?</font></a></label>
 									</div>
 									<br/>
 									<br/>
@@ -46,7 +45,7 @@
 									<hr/>
 								</form> 
 			</center>		 
-		 </div>
+		 </div>f
      </div>
 </div>
 </body>

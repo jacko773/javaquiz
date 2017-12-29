@@ -6,10 +6,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
     body{
-	  background-image:url("edu2.jpg");
+	  background-image:url("ed.jpg");
 	  background-repeat: no-repeat;
     background-size: 100% 100%;
-	background-color:grey;
 	opacity:0.7;
   }
   #home{
@@ -23,7 +22,7 @@
 	 <div class="">
 		 <div class="container"> 
              <center>	 
-			     <p style="color:white"><em>Enter your email below to send password<br/>reset link and instruction</em></p>
+			     <p style="color:green"><em>Enter your email below to send password<br/>reset link and instruction</em></p>
 							
 								<form style="width:300px" action="sendemail.jsp">  
 									<div class="form-group">   

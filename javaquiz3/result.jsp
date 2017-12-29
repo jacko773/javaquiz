@@ -1,6 +1,7 @@
 <%@ page import="java.sql.*" %>
 <%
 String args=request.getParameter("myArray");
+out.println(args);
 String arr[]=args.split(",");
 String database=request.getParameter("db");
 String tb=request.getParameter("tb");
@@ -38,9 +39,11 @@ int count=0;
 			<%count=count+1;%>
 			<td>+1</td>
 
-		<%}else{%>
-			<td>-1</td>
+		<%}else if(arr[i].length()!=0){%>
 			<%count=count-1;%>
+			<td>-1</td>
+		<%}else{%>
+			<td>+0</td>
 		<%}%>
 		<td><%=count%></td>
 	</tr>
