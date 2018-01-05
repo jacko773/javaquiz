@@ -5,23 +5,30 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <style>
-  body{
-	  background-image:url("ed.jpg");
-	  background-repeat: no-repeat;
-	  background-size: 100% 100%;
-	  opacity:0.7;
-  }
-		#testt{
-				display:box;
-				min-width:100px;
-				background-color:#DCDCDC;
-				margin-top:10px;
-				height:60px;
-		}
-		#testt > a{
-			test-alignment:middle;
-		}
-  
+body{
+	background-image:url("ed.jpg");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	opacity:0.7;
+	overflow:hidden;
+ }
+#testt{
+	display:box;
+	min-width:100px;
+	background-color:#DCDCDC;
+	margin-top:10px;
+	height:60px;
+}
+#testt > a{
+	test-alignment:middle;
+}
+#home{
+	margin-top:-20px;
+	width:100%;
+	height:100%;
+	background:#202A36;
+	color:white;
+}  
 </style>
 <body>
 <jsp:include page="header.jsp"/>
@@ -37,14 +44,14 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-			 <li class="active"><a class="navbar-brand" href="#">Home</a></li>
-			 <li><a href="#CoreJava" id="#CoreJava">J2SE</a></li>
-			 <li><a href="#AdvJava" id="#AdvJava">J2EE</a></li>
-			 <li><a href="#" id="#DS">Data Structure</a></li>
-			 <li><a href="#" id="#Quiz">Java Quizes</a></li>
-			 <li><a href="#" id="#dsquiz">DS Quizes</a></li>
-			 <li><a href="#" id="#Interview">Interview</a></li>
-             <li><a href="#" id="#Contact">Contact</a></li>			 
+			 <li class="active"><a class="navbar-brand" href="#" onclick="displaycontent('home')">Home</a></li>
+			 <li><a href="#CoreJava" id="#CoreJava" onclick="displaycontent('CoreJava')">J2SE</a></li>
+			 <li><a href="#AdvJava" id="#AdvJava" onclick="displaycontent('AdvJava')">J2EE</a></li>
+			 <li><a href="#" id="#DS" onclick="displaycontent('DS')">Data Structure</a></li>
+			 <li><a href="#" id="#Quiz" onclick="displaycontent('Quiz')">Java Quizes</a></li>
+			 <li><a href="#" id="#dsquiz" onclick="displaycontent('dsquiz')">DS Quizes</a></li>
+			 <li><a href="#" id="#Interview" onclick="displaycontent('Interview')">Interview</a></li>
+             <li><a href="#" id="#Contact" onclick="displaycontent('Contact')">Contact</a></li>			 
       </ul>
     </div>
   </div>
@@ -54,12 +61,16 @@
 
 
 <div id="home" class="item">
-HOME
-HOME
-HOME
-HOME
-HOME
-HOME
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10">
+				dfjgiuerhgre
+			</div>
+			<div class="col-md-2">
+			dfhbidfuhb
+			</div>
+		</div>
+	</div>
 </div>
 
 
@@ -67,37 +78,38 @@ HOME
 <div class="wrapper">
 	<div class="fluid-container">
 		<div class="row">
-		<div class="col-md-2">
+			<div class="col-md-2">
 				<nav id="sidebar">
-					<div class="sidebar-header">
+					<!--<div class="sidebar-header">
 						<h3>Core java</h3>
 					</div>
-
+					-->
 					<ul class="list-unstyled components">
-						<li>
-							<a href="#home" data-toggle="collapse" aria-expanded="false">Home</a>
-							<ul class="collapse list-unstyled" id="home">
+					<li>
+						  <a href="#" data-toggle="collapse" data-target="#demo">Home</a>
+						  <ul id="demo" class="collapse list-unstyled">
 								<li><a href="#">Page</a></li>
 								<li><a href="#">Page</a></li>
 								<li><a href="#">Page</a></li>
-							</ul>
-						</li>
-						<li><a href="#">About</a></li>
-						<li> 
-							<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-							<ul class="collapse list-unstyled" id="homeSubmenu">
+						  </ul>
+					</li>
+					<li><a href="#">About</a></li>
+					<li>
+						<a href="#"  data-toggle="collapse" data-target="#demo1">Pages</a>
+						<ul id="demo1" class="collapse list-unstyled">
 								<li><a href="#">Page</a></li>
 								<li><a href="#">Page</a></li>
 								<li><a href="#">Page</a></li>
-							</ul>
-						</li>
+						</ul>
+					</li>
 						<li><a href="#">Portfolio</a></li>
 						<li><a href="#">Contact</a></li>
 					</ul>
 				</nav>
-		</div>
+			</div>
 			<div class="col-md-10">
 				<div id="content">
+					
 				</div>
 			</div>
 		</div>
@@ -232,11 +244,14 @@ Contact
 		$("li").removeClass("active");
 		$(this).addClass("active");
 	});
-	$("li a").click(function(){
-		$(".item").hide();
-		var next=(this.id).toString();
-		$(next).toggle();	
-	});
+	function displaycontent(contents) {
+		var i;
+		var x = document.getElementsByClassName("item");
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none"; 
+		}
+		document.getElementById(contents).style.display = "block"; 
+	}
 </script>
 	<script>
 		$(document).ready(function () {
