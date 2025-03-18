@@ -20,7 +20,7 @@
 %>
 <%
 	final String msg="<div><font color='green'>vinay</font></div><br/>http://localhost:8080/javaquiz3/newpassword.jsp?tocken="+tocken;  
-	final String sub="javaQuiz password reset link";   
+	final String sub="javaQuiz password reset link sending m,ail to test GITHUB_API integration";   
 	final String from="vinay18011@gmail.com";
 	final String password="Vinay308080@";
 	Properties props = new Properties();    
