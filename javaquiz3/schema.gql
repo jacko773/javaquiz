@@ -4,9 +4,6 @@ scalar Date
 type UserInfo {
   sub: String
   name: String
-  picture: String
-  email: String
-  zoneinfo: String
   locale: String
   azureGroup: String
 }
@@ -16,8 +13,6 @@ union Permission = FunctionalityPermission | EntityFunction
 type FunctionalityPermission {
   product: String
   value: String
-  projectName: String @deprecated(reason: "use product")
-  name: String @deprecated(reason: "use stringValue")
   authorized: String @deprecated(reason: "")
   # entityFunction: EntityFunction
 }
@@ -26,8 +21,6 @@ type UserAccount {
   id: ID
   username: Strin
   meta: UserMeta
-  lastLogin: LastLogin
-  profiles(withPermissions:Boolean = true, product: UserProfileProduct): UserProfileList
   businessAccounts: BusinessAccountList
   # permissions: [Permission!]
 }
@@ -64,8 +57,6 @@ type UserMetaEntry {
   clientId: String
 }
 
-
-
 type TwoFactorAuthentication {
   verified: Boolean
 }
@@ -73,8 +64,6 @@ type TwoFactorAuthentication {
 # TODO: Start - Future placeholders
 type BusinessAccountList {
   dmpAccountGroups:[DmpAccountGroup]
-  publishers:[Publisher]
-  adformInventorySources:[AdformInventorySource]
 }
 
 type AdformInventorySource {
@@ -90,16 +79,7 @@ enum EntityDomain {
   CREATIVE
 }
 
-
-
 type Query {
-  userInfo:UserInfo @deprecated(reason: "use userAccount")
-  userPermissions:[FunctionalityPermission]! @deprecated(reason: "use userAccount.permissions")
-  hasPermission (
-      projectName:String,
-      product:String,
-      name:String!
-  ):FunctionalityPermission! @deprecated(reason: "use userAccount.permissions")
   userIsAuthenticated:Boolean!
   userAccount:UserAccount
 }
