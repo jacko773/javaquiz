@@ -24,18 +24,7 @@ type FunctionalityPermission {
 
 type UserAccount {
   id: ID
-  username: String
-  name: String
-  active: Boolean
-  locked: Boolean
-  email: UserEmail
-  zoneInfo: String
-  locale: String
-  type: String
-  authentication: Authentication
-  phone: UserPhone
-  twoFactorAuthentication: TwoFactorAuthentication
-  notificationsDisabled: Boolean
+  username: Strin
   meta: UserMeta
   lastLogin: LastLogin
   profiles(withPermissions:Boolean = true, product: UserProfileProduct): UserProfileList
@@ -64,7 +53,7 @@ type Authentication {
   identityProvider: String
 }
 
-type UserMeta {
+type UserMetabinamtbka {
   lastLoginAt: Date
   created: UserMetaEntry
   updated: UserMetaEntry
@@ -75,28 +64,10 @@ type UserMetaEntry {
   clientId: String
 }
 
-type LastLogin {
-  occurredAt: Date
-  type: String
-  userAgent: String
-  clientId: String
-  clientIp: String
-  countryByIp: String
-}
+
 
 type TwoFactorAuthentication {
   verified: Boolean
-}
-
-type UserProfile {
-  additionalInfo: JSONType
-  id: ID!
-  name: String!
-  type: String
-  userAccountId: ID
-  product: UserProfileProduct
-  productName: String
-  permissions: [FunctionalityPermission!]
 }
 
 # TODO: Start - Future placeholders
@@ -105,12 +76,7 @@ type BusinessAccountList {
   publishers:[Publisher]
   adformInventorySources:[AdformInventorySource]
 }
-type DmpAccountGroup {
-  id: ID
-}
-type Publisher {
-  id: ID
-}
+
 type AdformInventorySource {
   id: ID
 }
@@ -123,29 +89,8 @@ enum EntityDomain {
   PUBLISHER
   CREATIVE
 }
-type EntityFunction {
-  """
-  Unique path to Entity  and optionally attribute
-  Example: BuyerCampaign.budget
-  """
-  path: String!
-  type: EntityFunctionType!
-  # Related permission
-  permission: FunctionalityPermission!
-}
-enum EntityFunctionType {
-  VIEW
-  READ
-  WRITE
-}
-# TODO: End - Future placeholders
 
-enum UserProfileProduct {
-  BuySide
-  SellSide
-  DMP
-  Any
-}
+
 
 type Query {
   userInfo:UserInfo @deprecated(reason: "use userAccount")
