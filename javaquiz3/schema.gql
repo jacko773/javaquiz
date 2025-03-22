@@ -7,15 +7,3 @@ type UserInfo {
   locale: String
   azureGroup: String
 }
-
-union Permission = FunctionalityPermission | EntityFunction
-
-type Query {
-  userIsAuthenticated:Boolean!
-  userAccount:UserAccount
-}
-
-type Mutation {
-  clearMiddlewareStoreMapping:Boolean! @deprecated(reason: "mapping store is deprecated")
-  setDefaultProfile(id: ID!):ID
-}
