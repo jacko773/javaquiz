@@ -1,7 +1,7 @@
 scalar EmailAddress
 scalar JSONType
 scalar Date
-type UserInfo {
+type UserInfoV2 {
   sub: String
   name: String
   picture: String
@@ -14,9 +14,9 @@ type UserInfo {
 union Permission = FunctionalityPermission | EntityFunction
 
 type FunctionalityPermission {
-  product: String
+  Product: String
   value: String
-  projectName: String @deprecated(reason: "use product")
+  project_name: String @deprecated(reason: "use product")
   name: String @deprecated(reason: "use stringValue")
   authorized: String @deprecated(reason: "")
   # entityFunction: EntityFunction
