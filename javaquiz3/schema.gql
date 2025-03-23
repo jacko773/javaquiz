@@ -4,6 +4,162 @@ scalar Date
 type UserInfo {
   sub: String
   name: String
+  picture: String
+  email: String
+  zoneinfo: String
   locale: String
   azureGroup: String
+}
+
+union Permission = FunctionalityPermission | EntityFunction
+
+type FunctionalityPermission {
+  product: String
+  value: String
+  projectName: String @deprecated(reason: "use product")
+  name: String @deprecated(reason: "use stringValue")
+  authorized: String @deprecated(reason: "")
+  # entityFunction: EntityFunction
+}
+
+type UserAccount {
+  id: ID
+  username: String
+  name: String
+  active: Boolean
+  locked: Boolean
+  email: UserEmail
+  zoneInfo: String
+  locale: String
+  type: String
+  authentication: Authentication
+  phone: UserPhone
+  twoFactorAuthentication: TwoFactorAuthentication
+  notificationsDisabled: Boolean
+  meta: UserMeta
+  lastLogin: LastLogin
+  profiles(withPermissions:Boolean = true, product: UserProfileProduct): UserProfileList
+  businessAccounts: BusinessAccountList
+  # permissions: [Permission!]
+}
+
+type UserProfileList {
+  accountProfiles: [UserProfile!]!
+  currentProfile: UserProfile
+  defaultProfile: UserProfile
+}
+
+type UserPhone {
+  primary: String
+  primaryVerifed: Boolean
+}
+
+type UserEmail {
+  primary: EmailAddress
+  primaryVerified: Boolean
+  secondary: EmailAddress
+}
+
+type Authentication {
+  identityProvider: String
+}
+
+type UserMeta {
+  lastLoginAt: Date
+  created: UserMetaEntry
+  updated: UserMetaEntry
+}
+
+type UserMetaEntry {
+  timestamp: Date
+  clientId: String
+}
+
+type LastLogin {
+  occurredAt: Date
+  type: String
+  userAgent: String
+  clientId: String
+  clientIp: String
+  countryByIp: String
+}
+
+type TwoFactorAuthentication {
+  verified: Boolean
+}
+
+type UserProfile {
+  additionalInfo: JSONType
+  id: ID!
+  name: String!
+  type: String
+  userAccountId: ID
+  product: UserProfileProduct
+  productName: String
+  permissions: [FunctionalityPermission!]
+}
+
+# TODO: Start - Future placeholders
+type BusinessAccountList {
+  dmpAccountGroups:[DmpAccountGroup]
+  publishers:[Publisher]
+  adformInventorySources:[AdformInventorySource]
+}
+type DmpAccountGroup {
+  id: ID
+}
+type Publisher {
+  id: ID
+}
+type AdformInventorySource {
+  id: ID
+}
+type LicencedFeature {
+  id:ID
+}
+enum EntityDomain {
+  CAMPAIGN
+  AUDIENCE
+  PUBLISHER
+  CREATIVE
+}
+type EntityFunction {
+  """
+  Unique path to Entity  and optionally attribute
+  Example: BuyerCampaign.budget
+  """
+  path: String!
+  type: EntityFunctionType!
+  # Related permission
+  permission: FunctionalityPermission!
+}
+enum EntityFunctionType {
+  VIEW
+  READ
+  WRITE
+}
+# TODO: End - Future placeholders
+
+enum UserProfileProduct {
+  BuySide
+  SellSide
+  DMP
+  Any
+}
+
+type Query {
+  userInfo:UserInfo @deprecated(reason: "use userAccount")
+  userPermissions:[FunctionalityPermission]! @deprecated(reason: "use userAccount.permissions")
+  hasPermission (
+      projectName:String,
+      product:String,
+      name:String!
+  ):FunctionalityPermission! @deprecated(reason: "use userAccount.permissions")
+  userIsAuthenticated:Boolean!
+  userAccount:UserAccount
+}
+
+type Mutation {
+  clearMiddlewareStoreMapping:Boolean! @deprecated(reason: "mapping store is deprecated")
+  setDefaultProfile(id: ID!):ID
 }
