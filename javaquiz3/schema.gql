@@ -11,9 +11,9 @@ type UserInfoV2 {
   azureGroup: String
 }
 
-union Permission = FunctionalityPermission | EntityFunction
+union Permission = functionalityPermission | EntityFunction
 
-type FunctionalityPermission {
+type functionalityPermission {
   Product: String
   value: String
   project_name: String @deprecated(reason: "use product")
