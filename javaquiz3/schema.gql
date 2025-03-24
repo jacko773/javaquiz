@@ -16,9 +16,9 @@ union Permission = functionalityPermission | EntityFunction
 type functionalityPermission {
   Product: String
   value: String
-  project_name: String @deprecated(reason: "use product")
-  name: String @deprecated(reason: "use stringValue")
-  authorized: String @deprecated(reason: "")
+  project_name: String
+  name: String 
+  authorized: String 
   # entityFunction: EntityFunction
 }
 
@@ -38,9 +38,7 @@ type UserAccount {
   notificationsDisabled: Boolean
   meta: UserMeta
   lastLogin: LastLogin
-  profiles(withPermissions:Boolean = true, product: UserProfileProduct): UserProfileList
   businessAccounts: BusinessAccountList
-  # permissions: [Permission!]
 }
 
 type UserProfileList {
@@ -148,18 +146,18 @@ enum UserProfileProduct {
 }
 
 type Query {
-  userInfo:UserInfo @deprecated(reason: "use userAccount")
-  userPermissions:[FunctionalityPermission]! @deprecated(reason: "use userAccount.permissions")
+  userInfo:UserInfo 
+  userPermissions:[FunctionalityPermission]! 
   hasPermission (
       projectName:String,
       product:String,
       name:String!
-  ):FunctionalityPermission! @deprecated(reason: "use userAccount.permissions")
+  ):FunctionalityPermission!
   userIsAuthenticated:Boolean!
   userAccount:UserAccount
 }
 
 type Mutation {
-  clearMiddlewareStoreMapping:Boolean! @deprecated(reason: "mapping store is deprecated")
+  clearMiddlewareStoreMapping:Boolean!
   setDefaultProfile(id: ID!):ID
 }
