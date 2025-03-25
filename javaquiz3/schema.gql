@@ -1,7 +1,7 @@
-scalar EmailAddress
+scalar email_address
 scalar JSONType
 scalar Date
-type UserInfoV2 {
+type userInfoV2 {
   sub: String
   name: String
   picture: String
@@ -11,8 +11,6 @@ type UserInfoV2 {
   azureGroup: String
 }
 
-union Permission = functionalityPermission | EntityFunction
-
 type functionalityPermission {
   Product: String
   value: String
@@ -21,6 +19,8 @@ type functionalityPermission {
   authorized: String 
   # entityFunction: EntityFunction
 }
+
+union Permission = functionalityPermission | EntityFunction
 
 type UserAccount {
   id: ID
@@ -155,9 +155,18 @@ type Query {
   ):FunctionalityPermission!
   userIsAuthenticated:Boolean!
   userAccount:UserAccount
+  getusers: [UserAccount]
+}
+
+input UserInput{
+  id: ID!
+  name: String
+  EmailAddress: String
+  mobilenumber: Int
 }
 
 type Mutation {
   clearMiddlewareStoreMapping:Boolean!
   setDefaultProfile(id: ID!):ID
+  createUserDto(Usermodel: UserInput!): UserAccount
 }
