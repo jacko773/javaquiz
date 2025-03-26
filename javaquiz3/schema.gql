@@ -1,164 +1,248 @@
-scalar email_address
-scalar JSONType
-scalar Date
-type userInfoV2 {
-  sub: String
-  name: String
-  picture: String
-  email: String
-  zoneinfo: String
-  locale: String
-  azureGroup: String
-}
-
-type functionalityPermission {
-  Product: String
-  value: String
-  project_name: String
-  name: String 
-  authorized: String 
-}
-
-union Permission = functionalityPermission | EntityFunction
-
-type UserAccount {
-  id: ID
-  username: String
-  name: String
-  active: Boolean
-  locked: Boolean
-  email: UserEmail
-  zoneInfo: String
-  locale: String
-  type: String
-  authentication: Authentication
-  phone: UserPhone
-  twoFactorAuthentication: TwoFactorAuthentication
-  notificationsDisabled: Boolean
-  meta: UserMeta
-  lastLogin: LastLogin
-  businessAccounts: BusinessAccountList
-}
-
-type UserProfileList {
-  accountProfiles: [UserProfile!]!
-  currentProfile: UserProfile
-  defaultProfile: UserProfile
-}
-
-type UserPhone {
-  primary: String
-  primaryVerifed: Boolean
-}
-
-type UserEmail {
-  primary: EmailAddress
-  primaryVerified: Boolean
-  secondary: EmailAddress
-}
-
-type Authentication {
-  identityProvider: String
-}
-
-type UserMeta {
-  lastLoginAt: Date
-  created: UserMetaEntry
-  updated: UserMetaEntry
-}
-
-type UserMetaEntry {
-  timestamp: Date
-  clientId: String
-}
-
-type LastLogin {
-  occurredAt: Date
-  type: String
-  userAgent: String
-  clientId: String
-  clientIp: String
-  countryByIp: String
-}
-
-type TwoFactorAuthentication {
-  verified: Boolean
-}
-
-type UserProfile {
-  additionalInfo: JSONType
+"""
+Authenticated user information
+"""
+type UserAuthorization {
+  """
+  Id of the user
+  """
   id: ID!
+  """
+  User Default Profile Id
+  """
+  defaultProfileId: ID
+  """
+  User business accounts
+  """
+  businessAccounts: [UserAuthorizationBusinessAccount!]!
+  """
+  Business Accounts unavailable to user because of security settings
+  """
+  restrictedBusinessAccounts: [UserAuthorizationBusinessAccount]
+}
+
+"""
+Current context user information
+"""
+type UserCurrentContext {
+  """
+  Id of the user
+  """
+  userId: ID!
+  """
+  Current profile context id
+  """
+  contextId: ID!
+  """
+  Actor Id
+  """
+  actorId: ID!
+  """
+  Impersonation type
+  """
+  impersonationType: ImpersonationType!
+}
+
+"""
+Business account
+"""
+type UserAuthorizationBusinessAccount {
+  """
+  Id of the bussiness account
+  """
+  id: ID!
+  """
+  Legacy business account id
+  """
+  legacyId: Int!
+  """
+  Business account name
+  """
   name: String!
-  type: String
-  userAccountId: ID
-  product: UserProfileProduct
-  productName: String
-  permissions: [FunctionalityPermission!]
+  """
+  User profile corresponding to the business account
+  """
+  profile: UserAuthorizationProfile!
+  """
+  Business account type
+  """
+  type: UserAuthorizationBusinessAccountType!
+  """
+  User permissions
+  """
+  permissions: [String]!
+  """
+  Business account security settings
+  """
+  restrictions: UserAuthorizationBusinessAccountRestrictions
 }
 
-type BusinessAccountList {
-  dmpAccountGroups:[DmpAccountGroup]
-  publishers:[Publisher]
-  adformInventorySources:[AdformInventorySource]
-}
-type DmpAccountGroup {
-  id: ID
-}
-type Publisher {
-  id: ID
-}
-type AdformInventorySource {
-  id: ID
-}
-type LicencedFeature {
-  id:ID
-}
-enum EntityDomain {
-  CAMPAIGN
-  AUDIENCE
-  PUBLISHER
-  CREATIVE
-}
-type EntityFunction {
-  path: String!
-  type: EntityFunctionType!
-  permission: FunctionalityPermission!
-}
-enum EntityFunctionType {
-  VIEW
-  READ
-  WRITE
+"""
+Business account security settings
+"""
+type UserAuthorizationBusinessAccountRestrictions {
+  """
+  List of IP addresses for authentication
+  """
+  whitelistedIps: [String]
+  """
+  Two factor authentication requirement
+  """
+  twoFaRequired: Boolean!
+  """
+  List of IP addresses for bypass two factor authentication
+  """
+  twoFaBypassIps: [String]
 }
 
-enum UserProfileProduct {
-  BuySide
-  SellSide
-  DMP
-  Any
+"""
+User profile
+"""
+type UserAuthorizationProfile {
+  """
+  Profile id
+  """
+  id: ID!
+  """
+  Profile legacy id
+  """
+  legacyId: Int!
+  """
+  Profile name
+  """
+  name: String!
+  """
+  Profile type
+  """
+  type: UserAuthorizationAccountType!
+  """
+  2FA required for the profile
+  """
+  twoFaRequired: Boolean!
+  """
+  Profile not from a whitelisted Ip
+  """
+  restrictedIp: Boolean!
+  """
+  Profile from 2FA bypassed Ip
+  """
+  twoFaBypassedIp: Boolean!
+}
+
+"""
+User details
+"""
+type UserDetails {
+  """
+  Id of the user
+  """
+  id: ID!,
+  """
+  Username
+  """
+  username: String!,
+  """
+  First Name
+  """
+  firstName: String!,
+  """
+  Last Name
+  """
+  lastName: String!,
+  """
+  User Email
+  """
+  email: String!,
+  """
+  User Locale
+  """
+  locale: String!,
+  """
+  User TimeZone Id
+  """
+  timeZone: String!,
+  """
+  Last Login Attempt Information
+  """
+  lastLoginAttempt: LoginAttempt
+}
+
+"""
+Login Attempt Information
+"""
+type LoginAttempt {
+  """
+  Login Attempt Status
+  """
+  success: Boolean!,
+  """
+  Login Date and time which identifies last time (in UTC) when user attempted to login
+  """
+  attemptAt: Date!
+}
+
+"""
+Authorized User details
+"""
+type AuthorizedUserDetails {
+  """
+  Actor
+  """
+  actor: UserDetails!,
+  """
+  Impersonated User
+  """
+  impersonatedUser: UserDetails
+}
+
+"""
+Business account type
+"""
+enum UserAuthorizationBusinessAccountType {
+  adform
+  agency
+  publisher
+  dataProvider
+}
+
+"""
+User account type
+"""
+enum UserAuthorizationAccountType {
+  agency
+  publisher
+  dmp
+  master
+  adform
+}
+
+"""
+impersonation type
+"""
+enum ImpersonationType {
+  none
+  adform
+  trafficker
+  profile
 }
 
 type Query {
-  userInfo:UserInfo 
-  userPermissions:[FunctionalityPermission]! 
-  hasPermission (
-      projectName:String,
-      product:String,
-      name:String!
-  ):FunctionalityPermission!
-  userIsAuthenticated:Boolean!
-  userAccount:UserAccount
-  getusers: [UserAccount]
-}
+  """
+  Returns authenticated user authorization information
+  """
+  userAuthorization: UserAuthorization
+  
+  """
+  Returns authenticated user current context information
+  """
+  userCurrentContext: UserCurrentContext
 
-input UserInput{
-  id: ID!
-  name: String
-  EmailAddress: String
-  mobilenumber: Int
-}
+  """
+  Returns authenticated user details
+  """
+  userDetails: UserDetails
 
-type Mutation {
-  clearMiddlewareStoreMapping:Boolean!
-  setDefaultProfile(id: ID!):ID
-  createUserDto(Usermodel: UserInput!): UserAccount
+  """
+  Returns authenticated user details with original actor information
+  """
+  authorizedUserDetails: AuthorizedUserDetails
 }
