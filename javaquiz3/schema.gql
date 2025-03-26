@@ -17,7 +17,6 @@ type functionalityPermission {
   project_name: String
   name: String 
   authorized: String 
-  # entityFunction: EntityFunction
 }
 
 union Permission = functionalityPermission | EntityFunction
@@ -97,7 +96,6 @@ type UserProfile {
   permissions: [FunctionalityPermission!]
 }
 
-# TODO: Start - Future placeholders
 type BusinessAccountList {
   dmpAccountGroups:[DmpAccountGroup]
   publishers:[Publisher]
@@ -122,13 +120,8 @@ enum EntityDomain {
   CREATIVE
 }
 type EntityFunction {
-  """
-  Unique path to Entity  and optionally attribute
-  Example: BuyerCampaign.budget
-  """
   path: String!
   type: EntityFunctionType!
-  # Related permission
   permission: FunctionalityPermission!
 }
 enum EntityFunctionType {
@@ -136,7 +129,6 @@ enum EntityFunctionType {
   READ
   WRITE
 }
-# TODO: End - Future placeholders
 
 enum UserProfileProduct {
   BuySide
