@@ -1,0 +1,164 @@
+scalar email_address
+scalar JSONType
+scalar Date
+type userInfoV2 {
+  sub: String
+  name: String
+  picture: String
+  email: String
+  zoneinfo: String
+  locale: String
+  azureGroup: String
+}
+
+type functionalityPermission {
+  Product: String
+  value: String
+  project_name: String
+  name: String 
+  authorized: String 
+}
+
+union Permission = functionalityPermission | EntityFunction
+
+type UserAccount {
+  id: ID
+  username: String
+  name: String
+  active: Boolean
+  locked: Boolean
+  email: UserEmail
+  zoneInfo: String
+  locale: String
+  type: String
+  authentication: Authentication
+  phone: UserPhone
+  twoFactorAuthentication: TwoFactorAuthentication
+  notificationsDisabled: Boolean
+  meta: UserMeta
+  lastLogin: LastLogin
+  businessAccounts: BusinessAccountList
+}
+
+type UserProfileList {
+  accountProfiles: [UserProfile!]!
+  currentProfile: UserProfile
+  defaultProfile: UserProfile
+}
+
+type UserPhone {
+  primary: String
+  primaryVerifed: Boolean
+}
+
+type UserEmail {
+  primary: EmailAddress
+  primaryVerified: Boolean
+  secondary: EmailAddress
+}
+
+type Authentication {
+  identityProvider: String
+}
+
+type UserMeta {
+  lastLoginAt: Date
+  created: UserMetaEntry
+  updated: UserMetaEntry
+}
+
+type UserMetaEntry {
+  timestamp: Date
+  clientId: String
+}
+
+type LastLogin {
+  occurredAt: Date
+  type: String
+  userAgent: String
+  clientId: String
+  clientIp: String
+  countryByIp: String
+}
+
+type TwoFactorAuthentication {
+  verified: Boolean
+}
+
+type UserProfile {
+  additionalInfo: JSONType
+  id: ID!
+  name: String!
+  type: String
+  userAccountId: ID
+  product: UserProfileProduct
+  productName: String
+  permissions: [FunctionalityPermission!]
+}
+
+type BusinessAccountList {
+  dmpAccountGroups:[DmpAccountGroup]
+  publishers:[Publisher]
+  adformInventorySources:[AdformInventorySource]
+}
+type DmpAccountGroup {
+  id: ID
+}
+type Publisher {
+  id: ID
+}
+type AdformInventorySource {
+  id: ID
+}
+type LicencedFeature {
+  id:ID
+}
+enum EntityDomain {
+  CAMPAIGN
+  AUDIENCE
+  PUBLISHER
+  CREATIVE
+}
+type EntityFunction {
+  path: String!
+  type: EntityFunctionType!
+  permission: FunctionalityPermission!
+}
+enum EntityFunctionType {
+  VIEW
+  READ
+  WRITE
+}
+
+enum UserProfileProduct {
+  BuySide
+  SellSide
+  DMP
+  Any
+}
+
+type Query {
+  userInfo:UserInfo 
+  userPermissions:[FunctionalityPermission]! 
+  hasPermission (
+      projectName:String,
+      product:String,
+      name:String!
+  ):FunctionalityPermission!
+  userIsAuthenticated:Boolean!
+  userAccount:UserAccount
+  getusers: [UserAccount]
+}
+
+input UserInput{
+  id: ID!
+  name: String
+  EmailAddress: String
+  mobilenumber: Int
+}
+
+type Mutation {
+  clearMiddlewareStoreMapping:Boolean!
+  setDefaultProfile(id: ID!):ID
+  createUserDto(Usermodel: UserInput!): UserAccount
+}
