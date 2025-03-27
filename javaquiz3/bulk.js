@@ -1,5 +1,4 @@
-import moment from 'moment-timezone';
-
+import { formatDate, formatDateTime } from '../helpers/dateUtils'; // New utility functions
 import { mutateLineItemModel } from '../helpers/errorHandling';
 import { RTB_LI_VALIDATION_REASON_TYPES, DATE_FORMAT, DATE_TIME_FORMAT } from '../helpers/constants';
 
@@ -9,42 +8,39 @@ export const transformations = {
       const { timeZone } = context.order.campaign;
       const { order } = context;
       const { periods: lineItemPeriods } = parent;
-      const startDate = moment(order.startDate.substring(0, 10)).startOf('day').format(DATE_TIME_FORMAT);
-      const endDate = moment(order.endDate.substring(0, 10)).startOf('day').format(DATE_TIME_FORMAT);
-      const currentDate = moment().tz(timeZone, true).startOf('day').format(DATE_TIME_FORMAT);
+
+      const startDate = formatDateTime(order.startDate);
+      const endDate = formatDateTime(order.endDate);
+      const currentDate = formatDateTime(new Date(), timeZone);
       const orderStartDate = moment(startDate).isBefore(currentDate) ? currentDate : startDate;
       const orderEndDate = moment(endDate).endOf('day').seconds(0).format(DATE_TIME_FORMAT);
 
-      const periods = [];
-      lineItemPeriods.forEach(({ start: currentLineItemStart, end: currentLineItemEnd }, index) => {
-        const isLineItemStartBetweenOrderDates = moment(currentLineItemStart)
-          .isBetween(moment(orderStartDate), moment(orderEndDate));
-        const isLineItemEndBetweenOrderDates = moment(currentLineItemEnd)
-          .isBetween(moment(orderStartDate), moment(orderEndDate));
+      const periods = lineItemPeriods.map(({ start, end }, index) => {
+        const isStartValid = moment(start).isBetween(orderStartDate, orderEndDate);
+        const isEndValid = moment(end).isBetween(orderStartDate, orderEndDate);
 
-        let start = isLineItemStartBetweenOrderDates ? moment(currentLineItemStart).format(DATE_TIME_FORMAT) : null;
+        let newStart = isStartValid ? formatDateTime(start) : null;
+        let newEnd = isEndValid ? formatDateTime(end) : null;
 
-        let end = isLineItemEndBetweenOrderDates ? moment(currentLineItemEnd).format(DATE_TIME_FORMAT) : null;
-
-        if (start && !end && index === lineItemPeriods.length - 1) {
-          end = orderEndDate;
+        if (newStart && !newEnd && index === lineItemPeriods.length - 1) {
+          newEnd = orderEndDate;
         }
 
-        if (!start && end && index === 0) {
-          start = orderStartDate;
+        if (!newStart && newEnd && index === 0) {
+          newStart = orderStartDate;
         }
 
-        if (!start && end) {
-          start = moment(currentLineItemEnd).tz(timeZone, true).startOf('day').format(DATE_TIME_FORMAT);
+        if (!newStart && newEnd) {
+          newStart = formatDateTime(end, timeZone);
         }
 
-        if (start && !end && moment(currentLineItemEnd).isSame(moment(orderEndDate))) {
-          end = orderEndDate;
+        if (newStart && !newEnd && moment(end).isSame(moment(orderEndDate))) {
+          newEnd = orderEndDate;
         }
-        if (start || end) {
-          periods.push({ start, end });
-        }
-      });
+
+        return (newStart || newEnd) ? { start: newStart, end: newEnd } : null;
+      }).filter(Boolean);
+
       parent.periods = periods.length ? periods : [{ start: startDate, end: endDate }];
     },
   },
@@ -53,26 +49,26 @@ export const transformations = {
       const { order } = context;
       const { timeZone } = context.order.campaign;
       const { budgetFlights } = parent.budget;
-      const currentDate = moment().tz(timeZone).format(DATE_FORMAT);
-      const formattedOrderStartDate = (order.startDate).substring(0, 10);
-      const formattedOrderEndDate = (order.endDate).substring(0, 10);
-      const extendedOrderEndDate = moment(formattedOrderEndDate).add(1, 'year').format(DATE_FORMAT);
+      const currentDate = formatDate(new Date(), timeZone);
+      const formattedOrderStartDate = order.startDate.substring(0, 10);
+      const formattedOrderEndDate = order.endDate.substring(0, 10);
+      const extendedOrderEndDate = formatDate(moment(formattedOrderEndDate).add(1, 'year'));
 
       const pendingBudgetFlights = budgetFlights
-        .map((budgetFlight) => ({
+        .map(budgetFlight => ({
           ...budgetFlight,
-          startDate: (budgetFlight.startDate).substring(0, 10),
-          endDate: (budgetFlight.endDate).substring(0, 10),
+          startDate: budgetFlight.startDate.substring(0, 10),
+          endDate: budgetFlight.endDate.substring(0, 10),
         }))
-        .filter(({ endDate, startDate }) => moment(endDate).isSameOrAfter(currentDate)
-            && moment(startDate).isSameOrBefore(extendedOrderEndDate));
+        .filter(({ endDate, startDate }) => moment(endDate).isSameOrAfter(currentDate) &&
+            moment(startDate).isSameOrBefore(extendedOrderEndDate));
 
       if (pendingBudgetFlights.length === 0) {
         const { start } = parent.periods[0];
         const { end } = parent.periods[parent.periods.length - 1];
         parent.budget.budgetFlights = {
-          startDate: moment(start).format(DATE_FORMAT),
-          endDate: moment(end).format(DATE_FORMAT),
+          startDate: formatDate(start),
+          endDate: formatDate(end),
           budget: 0,
           periodType: 'total',
           locked: false,
@@ -81,52 +77,37 @@ export const transformations = {
         };
         return;
       }
-      const modifiedBudgetFlights = pendingBudgetFlights.map((budgetFlight) => {
+
+      parent.budget.budgetFlights = pendingBudgetFlights.map(budgetFlight => {
         const { startDate } = budgetFlight;
-        const newStartDate = () => {
-          const budgetFlightStartsBeforeOrder = moment(startDate).isBefore(formattedOrderStartDate);
+        const newStartDate = moment(startDate).isBefore(formattedOrderStartDate) 
+          ? (moment(formattedOrderStartDate).isSameOrBefore(currentDate) ? currentDate : formattedOrderStartDate)
+          : (moment(startDate).isSameOrBefore(currentDate) ? currentDate : startDate);
 
-          if (budgetFlightStartsBeforeOrder) {
-            return moment(formattedOrderStartDate).isSameOrBefore(currentDate) ? currentDate
-              : formattedOrderStartDate;
-          }
-
-          return moment(startDate).isSameOrBefore(currentDate)
-            ? currentDate
-            : startDate;
-        };
         return {
           ...budgetFlight,
-          startDate: newStartDate(),
+          startDate: newStartDate,
         };
       });
-      parent.budget.budgetFlights = modifiedBudgetFlights;
     },
   },
   impressionCappings: {
     Set: (parent) => {
-      Object.values(parent.impressionCappings).forEach(({ id }) => {
+      Object.keys(parent.impressionCappings).forEach(id => {
         delete parent.impressionCappings[id];
       });
     },
   },
-
   modifyLineItem: {
     Set: (parent, _property, value, _config, context) => {
       const { path, error } = value;
-      if (mutateLineItemModel()[error.reason]) {
-        mutateLineItemModel()[error.reason]({
-          path,
-          lineItemToMutate: parent,
-          error,
-          copyToOrder: context.order,
-        });
-      } else {
-        mutateLineItemModel()[RTB_LI_VALIDATION_REASON_TYPES.ValidationFailed]({
-          path,
-          lineItemToMutate: parent,
-        });
-      }
+      const mutation = mutateLineItemModel()[error.reason] || mutateLineItemModel()[RTB_LI_VALIDATION_REASON_TYPES.ValidationFailed];
+      mutation({
+        path,
+        lineItemToMutate: parent,
+        error,
+        copyToOrder: context.order,
+      });
     },
   },
 };
